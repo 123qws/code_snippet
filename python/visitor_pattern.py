@@ -41,7 +41,7 @@ class Binary(Expr):
 
 class Literal(Expr):
 
-    def __init__(self, value: int | float | str):
+    def __init__(self, value: int | float | str | None):
         self.value = value
 
     def accept(self, visitor: Visitor[T]) -> T:
