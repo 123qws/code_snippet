@@ -1,8 +1,5 @@
-# The Visitor pattern is about approximating the functional style within an OOP language.
-# We can define all of the behavior for a new operation on a set of types in one place,
-# without having to touch the types themselves.
-# It does this the same way we solve almost every problem in computer science:
-# by adding a layer of indirection.
+# The Visitor pattern allows adding new behaviors to existing class hierarchy
+# without altering any existing code.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -29,6 +26,10 @@ class Token(Enum):
 
 
 class Binary(Expr):
+    """
+    Each Concrete Expr must implement the `accept` method in such a way
+    that it calls the visitor's method corresponding to the expr's class.
+    """
 
     def __init__(self, left: Expr, operator: Token, right: Expr):
         self.left = left
@@ -64,6 +65,17 @@ class Visitor(ABC, Generic[T]):
         pass
 
 
+"""
+Concrete Visitors implement several versions of the same algorithm, which can
+work with all concrete component classes.
+
+You can experience the biggest benefit of the Visitor pattern when using it with
+a complex object structure, such as a Composite tree. In this case, it might be
+helpful to store some intermediate state of the algorithm while executing
+visitor's methods over various objects of the structure.
+"""
+
+
 class ExprPrinter(Visitor[str]):
 
     def print_expr(self, expr: Expr) -> str:
@@ -81,4 +93,5 @@ class ExprPrinter(Visitor[str]):
 if __name__ == "__main__":
     expr = Binary(Literal(3), Token.PLUS, Literal(5))
     printer = ExprPrinter()
-    print(printer.print_expr(expr))
+    expr_str = printer.print_expr(expr)
+    print(expr_str)
